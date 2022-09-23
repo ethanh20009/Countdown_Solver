@@ -2,11 +2,16 @@ package com.example.countdownsolver;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -22,6 +27,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+    }
+
+    private void setupSettings()
+    {
+        Settings.restrictingToCowntdown = ((Switch)findViewById(R.id.cdInputRestrictorSwitch)).isChecked();
 
     }
 
@@ -39,6 +49,37 @@ public class MainActivity extends AppCompatActivity {
         ((EditText)v).setText("");
     }
 
+    class NumberSolveThread implements Runnable
+    {
+        private Integer[] myNumberInputInts;
+        private int myTarget;
+        private Context mContext;
+        public NumberSolveThread(Integer[] numberInputInts, int target, Context mContext)
+        {
+            myNumberInputInts = numberInputInts;
+            myTarget = target;
+            this.mContext = mContext;
+        }
+
+        @Override
+        public void run() {
+            String result = SolveNumbers(myNumberInputInts, myTarget);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (result == null)
+                    {
+                        Toast.makeText(mContext, "Unsolvable", Toast.LENGTH_LONG).show();
+                        ((TextView)findViewById(R.id.stepResult)).setText("Steps will be displayed here.");
+                        return;
+                    }
+                    ((TextView)findViewById(R.id.stepResult)).setText(result);
+                }
+            });
+        }
+    }
+
+
     public void solveNumbers(View v)
     {
         //Get all required inputs
@@ -51,18 +92,19 @@ public class MainActivity extends AppCompatActivity {
             if (numberInputInts.length != 6){
                 throw new NumberFormatException();
             }
-            String result = SolveNumbers(numberInputInts, target);
-            if (result == null)
-            {
-                ((TextView)findViewById(R.id.stepResult)).setText("Cannot be solved");
-                return;
-            }
-            ((TextView)findViewById(R.id.stepResult)).setText(result);
+            ((TextView)findViewById(R.id.stepResult)).setText("Solving...");
+
+            //Create worker thread to solve
+            NumberSolveThread nst = new NumberSolveThread(numberInputInts, target, this);
+            Thread t = new Thread(nst);
+            t.start();
             return;
 
         }
         catch(NumberFormatException err)
         {
+            Toast.makeText(this, "Format of Numbers Invalid", Toast.LENGTH_LONG).show();
+
             ((TextView)findViewById(R.id.stepResult)).setText("Invalid number input\nMust enter 6 comma-separated numbers and a valid target.");
         }
 
@@ -177,7 +219,7 @@ public class MainActivity extends AppCompatActivity {
             //TODO: Display that error has occurred due to incorrect format
             Log.d("DebugMessage", "Format of letters error");
             TextView resultView = findViewById(R.id.LetterResultView);
-            resultView.setText("Invalid letter input");
+            Toast.makeText(this, "Format of letters Invalid", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -223,7 +265,8 @@ public class MainActivity extends AppCompatActivity {
             //TODO: Display file read error
             Log.d("DebugMessage", e.toString());
             TextView resultView = findViewById(R.id.LetterResultView);
-            resultView.setText("File Error");
+            Toast.makeText(this, "File error", Toast.LENGTH_LONG).show();
+
             return;
         }
     }
