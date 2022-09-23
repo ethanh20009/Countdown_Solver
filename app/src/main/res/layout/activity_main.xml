@@ -6,123 +6,140 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/LetterResultView"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingSettingsButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="232dp"
-        android:layout_marginTop="16dp"
-        android:text="Best Word"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/SolveLetterButton" />
-
-    <Button
-        android:id="@+id/SolveLetterButton"
-        android:layout_width="167dp"
-        android:layout_height="91dp"
-        android:layout_marginStart="188dp"
-        android:layout_marginTop="20dp"
-        android:onClick="solveLetters"
-        android:text="Solve"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inputLetterBox" />
-
-    <EditText
-        android:id="@+id/inputLetterBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:ems="10"
-        android:hint="abcdefghi"
-        android:inputType="textPersonName"
-        app:layout_constraintStart_toEndOf="@+id/letterInputLabel"
-        tools:layout_editor_absoluteY="134dp" />
-
-    <TextView
-        android:id="@+id/letterInputLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Input Letters"
-        android:textAlignment="center"
-        tools:layout_editor_absoluteX="62dp"
-        tools:layout_editor_absoluteY="145dp" />
-
-    <TextView
-        android:id="@+id/numberInputLabel"
-        android:layout_width="125dp"
-        android:layout_height="58dp"
-        android:layout_marginTop="243dp"
-        android:text="Input Numbers (comma seperated)"
-        android:textAlignment="center"
-        app:layout_constraintTop_toBottomOf="@+id/letterInputLabel"
-        tools:layout_editor_absoluteX="16dp" />
-
-    <EditText
-        android:id="@+id/numbersInput"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="27dp"
-        android:layout_marginTop="70dp"
-        android:ems="10"
-        android:hint="1, 2, 3, 4, 5, 6"
-        android:inputType="textPersonName"
-        app:layout_constraintStart_toEndOf="@+id/numberInputLabel"
-        app:layout_constraintTop_toBottomOf="@+id/LetterResultView" />
-
-    <TextView
-        android:id="@+id/targetLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="57dp"
-        android:text="Target"
-        app:layout_constraintEnd_toStartOf="@+id/TargetInput"
-        app:layout_constraintTop_toBottomOf="@+id/numberInputLabel" />
-
-    <EditText
-        android:id="@+id/TargetInput"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="9dp"
-        android:ems="10"
-        android:hint="123"
-        android:inputType="textPersonName"
-        app:layout_constraintStart_toEndOf="@+id/numberInputLabel"
-        app:layout_constraintTop_toBottomOf="@+id/numbersInput" />
-
-    <Button
-        android:id="@+id/SolveNumberButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="226dp"
-        android:layout_marginTop="14dp"
-        android:onClick="solveNumbers"
-        android:text="Solve"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/TargetInput" />
+        android:clickable="true"
+        app:srcCompat="@android:drawable/ic_menu_manage"
+        tools:layout_editor_absoluteX="355dp"
+        tools:layout_editor_absoluteY="627dp" />
 
     <ScrollView
-        android:layout_width="237dp"
-        android:layout_height="108dp"
-        android:layout_marginStart="87dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="87dp"
-        android:scrollbarStyle="insideInset"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/SolveNumberButton">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="-51dp"
+        tools:layout_editor_absoluteY="16dp">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/inputLetterBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="28dp"
+                android:layout_marginTop="40dp"
+                android:ems="10"
+                android:hint="abcdefghi"
+                android:imeOptions="actionDone"
+                android:inputType="text"
+                app:layout_constraintStart_toEndOf="@+id/letterInputLabel"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/letterInputLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="48dp"
+                android:text="Input Letters"
+                android:textAlignment="center"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/SolveLetterButton"
+                android:layout_width="169dp"
+                android:layout_height="84dp"
+                android:layout_marginStart="156dp"
+                android:layout_marginTop="16dp"
+                android:onClick="solveLetters"
+                android:text="Solve"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/inputLetterBox" />
+
+            <EditText
+                android:id="@+id/numbersInput"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="72dp"
+                android:ems="10"
+                android:hint="1, 2, 3, 4, 5, 6"
+                android:imeOptions="actionDone"
+                android:inputType="text"
+                app:layout_constraintStart_toEndOf="@+id/numberInputLabel"
+                app:layout_constraintTop_toBottomOf="@+id/LetterResultView" />
+
+            <EditText
+                android:id="@+id/TargetInput"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="28dp"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:hint="123"
+                android:imeOptions="actionDone"
+                android:inputType="number"
+                app:layout_constraintStart_toEndOf="@+id/numberInputLabel"
+                app:layout_constraintTop_toBottomOf="@+id/numbersInput" />
+
+            <TextView
+                android:id="@+id/numberInputLabel"
+                android:layout_width="143dp"
+                android:layout_height="66dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="204dp"
+                android:text="Input Numbers (comma seperated)"
+                android:textAlignment="center"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/inputLetterBox" />
+
+            <TextView
+                android:id="@+id/targetLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="72dp"
+                android:layout_marginTop="4dp"
+                android:text="Target"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/numberInputLabel" />
+
+            <Button
+                android:id="@+id/SolveNumberButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="224dp"
+                android:layout_marginTop="8dp"
+                android:onClick="solveNumbers"
+                android:text="Solve"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/TargetInput" />
 
             <TextView
                 android:id="@+id/stepResult"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Steps will be shown here" />
-        </LinearLayout>
+                android:layout_marginTop="20dp"
+                android:text="Steps will be shown here"
+                android:textAlignment="center"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/SolveNumberButton" />
+
+            <TextView
+                android:id="@+id/LetterResultView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="208dp"
+                android:layout_marginTop="12dp"
+                android:text="Best Word"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/SolveLetterButton" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
