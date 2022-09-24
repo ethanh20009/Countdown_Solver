@@ -10,12 +10,15 @@
         android:id="@+id/floatingSettingsButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:clickable="true"
-        app:srcCompat="@android:drawable/ic_menu_manage"
-        tools:layout_editor_absoluteX="355dp"
-        tools:layout_editor_absoluteY="627dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@android:drawable/ic_menu_manage" />
 
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout_editor_absoluteX="-51dp"
@@ -139,6 +142,18 @@
                 android:text="Best Word"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/SolveLetterButton" />
+
+            <Button
+                android:id="@+id/anagramSolveButton"
+                android:layout_width="126dp"
+                android:layout_height="55dp"
+                android:layout_marginStart="23dp"
+                android:layout_marginTop="32dp"
+                android:onClick="SolveAnagrams"
+                android:text="Solve Anagrams"
+                android:textSize="10sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/inputLetterBox" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 

@@ -1,7 +1,10 @@
 package com.example.countdownsolver;
 
 public class Settings {
+    public static boolean isRestrictingToCowntdown;
 
-    public static boolean restrictingToCowntdown;
-
+    //Default Settings
+    static{
+        isRestrictingToCowntdown = true;
+    }
 }

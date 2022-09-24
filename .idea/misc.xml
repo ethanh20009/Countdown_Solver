@@ -3,8 +3,17 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Bridgett/AndroidStudioProjects/CountdownSolver/app/src/main/res/layout-w1240dp/content_scrolling.xml" value="0.1609772423025435" />
+        <entry key="..\:/Users/Bridgett/AndroidStudioProjects/CountdownSolver/app/src/main/res/layout-w936dp/content_scrolling.xml" value="0.1721311475409836" />
+        <entry key="..\:/Users/Bridgett/AndroidStudioProjects/CountdownSolver/app/src/main/res/layout/activity_anagram.xml" value="0.2056434373663959" />
         <entry key="..\:/Users/Bridgett/AndroidStudioProjects/CountdownSolver/app/src/main/res/layout/activity_main.xml" value="0.268" />
         <entry key="..\:/Users/Bridgett/AndroidStudioProjects/CountdownSolver/app/src/main/res/layout/activity_settings.xml" value="0.2056434373663959" />
+        <entry key="..\:/Users/Bridgett/AndroidStudioProjects/CountdownSolver/app/src/main/res/layout/content_navigation_drawer.xml" value="0.2056434373663959" />
+        <entry key="..\:/Users/Bridgett/AndroidStudioProjects/CountdownSolver/app/src/main/res/layout/content_scrolling.xml" value="0.2056434373663959" />
+        <entry key="..\:/Users/Bridgett/AndroidStudioProjects/CountdownSolver/app/src/main/res/layout/fragment_gallery.xml" value="0.2056434373663959" />
+        <entry key="..\:/Users/Bridgett/AndroidStudioProjects/CountdownSolver/app/src/main/res/layout/fragment_home.xml" value="0.2056434373663959" />
+        <entry key="..\:/Users/Bridgett/AndroidStudioProjects/CountdownSolver/app/src/main/res/layout/fragment_slideshow.xml" value="0.2056434373663959" />
+        <entry key="..\:/Users/Bridgett/AndroidStudioProjects/CountdownSolver/app/src/main/res/layout/nav_header_navigation_drawer.xml" value="0.2056434373663959" />
         <entry key="..\:/Users/Bridgett/AndroidStudioProjects/CountdownSolver/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1215" />
       </map>
     </option>

@@ -3,13 +3,17 @@ package com.example.countdownsolver;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.w3c.dom.Text;
 
@@ -23,24 +27,43 @@ import java.util.stream.Collectors;
 
 public class MainActivity extends AppCompatActivity {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+
+        ((FloatingActionButton)findViewById(R.id.floatingSettingsButton)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+            }
+        });
+
+
     }
 
-    private void setupSettings()
+    public void SolveAnagram()
     {
-        Settings.restrictingToCowntdown = ((Switch)findViewById(R.id.cdInputRestrictorSwitch)).isChecked();
 
     }
+
 
     public void solveLetters(View v)
     {
 
         EditText inputLetterBox = findViewById(R.id.inputLetterBox);
         String letters = inputLetterBox.getText().toString();
-        Solve(letters);
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                Solve(letters);
+            }
+        };
+        Thread t = new Thread(runnable);
+        t.start();
 
     }
 
@@ -89,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
             List<String> numberInputList = Arrays.asList(numberInputs.split(", *"));
             Integer[] numberInputInts = numberInputList.stream().map(Integer::parseInt).collect(Collectors.toList()).toArray(new Integer[0]);
             int target = Integer.parseInt(targetInput);
-            if (numberInputInts.length != 6){
+            if (!InputValidator.validateNumbers(numberInputInts) || !InputValidator.validateTarget(target)){
                 throw new NumberFormatException();
             }
             ((TextView)findViewById(R.id.stepResult)).setText("Solving...");
@@ -211,29 +234,69 @@ public class MainActivity extends AppCompatActivity {
         return null;
     }
 
+    public void SolveAnagrams(View v)
+    {
+        String letters = ((EditText)findViewById(R.id.inputLetterBox)).getText().toString();
+        if (!InputValidator.validateLetterInput(letters))
+        {
+            Toast.makeText(getApplicationContext(), "Invalid letter input", Toast.LENGTH_LONG).show();
+
+        }
+        Thread t = new Thread(){
+            @Override
+            public void run()
+            {
+                try{
+                    String[] result = Solver.solveAnagram(letters, getApplicationContext());
+                    if (result.length == 0)
+                    {
+                        runOnUiThread(() -> {
+                            Toast.makeText(getApplicationContext(), "No solutions", Toast.LENGTH_LONG);
+                        });
+                        return;
+                    }
+                    runOnUiThread(() -> {
+                        Intent i = new Intent(getApplicationContext(), AnagramActivity.class);
+                        i.putExtra("MESSAGE", String.join("\n", result));
+                        startActivity(i);
+                    });
+                }
+                catch(IOException err)
+                {
+                    runOnUiThread(() -> {
+                        Toast.makeText(getApplicationContext(), "File error", Toast.LENGTH_LONG);
+                    });
+                    return;
+                }
+            }
+        };
+        t.start();
+    }
+
+
     public void Solve(String letters)
     {
-        Log.d("State", letters);
-        if (letters.length() != 9)
+        if (!InputValidator.validateLetterInput(letters))
         {
-            //TODO: Display that error has occurred due to incorrect format
-            Log.d("DebugMessage", "Format of letters error");
-            TextView resultView = findViewById(R.id.LetterResultView);
-            Toast.makeText(this, "Format of letters Invalid", Toast.LENGTH_LONG).show();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getApplicationContext(), "Format of letters Invalid", Toast.LENGTH_LONG).show();
+                }
+            });
             return;
         }
 
         //Solve
-        HashMap<Character, Integer> letterDict = getDictionary(letters);
+        HashMap<Character, Integer> letterDict = Solver.getDictionary(letters);
 
         try{
 
             ArrayList<String> words = FileHandler.getAllWords("words.txt", this);
-            Log.d("DebugMessage", "Got Here");
             for (int i = words.size()-1; i > -1; i--)
             {
                 String word = words.get(i);
-                HashMap<Character, Integer> dictWord = getDictionary(word);
+                HashMap<Character, Integer> dictWord = Solver.getDictionary(word);
                 boolean failed = false;
                 for (char c : dictWord.keySet())
                 {
@@ -250,10 +313,14 @@ public class MainActivity extends AppCompatActivity {
                 }
                 if (!failed)
                 {
-                    //TODO: Answer stored in variable 'word'
-                    TextView letterResultView = findViewById(R.id.LetterResultView);
-                    letterResultView.setText("Solved: " + word);
-                    Log.d("DebugMessage", "Solved: " + word);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            TextView letterResultView = findViewById(R.id.LetterResultView);
+                            letterResultView.setText("Solved: " + word);
+                        }
+                    });
+
                     return;
                 }
 
@@ -264,23 +331,19 @@ public class MainActivity extends AppCompatActivity {
         {
             //TODO: Display file read error
             Log.d("DebugMessage", e.toString());
-            TextView resultView = findViewById(R.id.LetterResultView);
-            Toast.makeText(this, "File error", Toast.LENGTH_LONG).show();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    TextView resultView = findViewById(R.id.LetterResultView);
+                    Toast.makeText(getApplicationContext(), "File error", Toast.LENGTH_LONG).show();
+                }
+            });
+
 
             return;
         }
     }
 
-    private HashMap<Character, Integer> getDictionary(String string) {
-        HashMap<Character, Integer> dict = new HashMap<>();
-        for (char c : string.toCharArray()) {
-            if (dict.containsKey(c)) {
-                dict.put(c, dict.get(c) + 1);
-            } else {
-                dict.put(c, 1);
-            }
-        }
-        return dict;
-    }
+
 
 }
