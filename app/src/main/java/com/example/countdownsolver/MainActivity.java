@@ -27,14 +27,14 @@ import java.util.stream.Collectors;
 
 public class MainActivity extends AppCompatActivity {
 
-
+    private NumberSolver numberSolver;
+    private LetterSolver letterSolver;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-
+        //Setup settings button
         ((FloatingActionButton)findViewById(R.id.floatingSettingsButton)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -42,6 +42,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //Initialise solver classes
+        numberSolver = new NumberImplimentation();
+        letterSolver = new LettersImplimentation();
 
     }
 
@@ -86,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void run() {
-            String result = SolveNumbers(myNumberInputInts, myTarget);
+            String result = numberSolver.SolveNumbers(myNumberInputInts, myTarget);
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -134,105 +137,8 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    /**
-     * For every step required, adds step to return string.
-     * Returns empty string if number already exists in list.
-     * returns None if not possible on route.
-     * @param numbers
-     * @param target
-     * @return "" if found, null if impossible and string of steps if steps required
-     */
-    private String SolveNumbers(Integer[] numbers, int target)
-    {
-        List<Integer> numbersList = Arrays.asList(numbers);
-        for (int n : numbers)
-        {
-            if (n == target)
-            {
-                return ""; //Works, return Success
-            }
-        }
-        if (numbers.length == 1){return null;}
-        for (int i = 1; i < numbers.length; i++)
-        {
-            for (int j = 0; j < i; j++)
-            {
-                //Every possible combination not including itself
-                int a = numbers[i];
-                int b = numbers[j];
-                String resultString;
-                ArrayList<Integer> ammended = new ArrayList<Integer>(numbersList);
-                ammended.remove((Object)a);
-                ammended.remove((Object)b);
 
-                String step;
-                int newValue;
-                List<Integer> preparedList;
 
-                //Do every possible order of operation
-
-                //Add
-                step = "Add " + String.valueOf(a) + " and " + String.valueOf(b);
-                newValue = a+b;
-                preparedList = new ArrayList<>(ammended);
-                preparedList.add(newValue);
-                resultString = SolveNumbers(preparedList.toArray(new Integer[0]), target);
-                if (resultString != null) //Success
-                {
-                    return step + ",\n" + resultString;
-                }
-
-                //Multiply
-                step = "Multiply " + String.valueOf(a) + " and " + String.valueOf(b);
-                newValue = a*b;
-                preparedList = new ArrayList<>(ammended);
-                preparedList.add(newValue);
-                resultString = SolveNumbers(preparedList.toArray(new Integer[0]), target);
-                if (resultString != null) //Success
-                {
-                    return step + ",\n" + resultString;
-                }
-
-                //Divide
-                //Make sure for a/b -> a > b then check if divides evenly.
-                if (a < b){ //Ensures a >= b
-                    int temp = a;
-                    a = b;
-                    b = temp;
-                }
-                if (b != 0 && a%b == 0){
-                    step = "Divide " + String.valueOf(a) + " by " + String.valueOf(b);
-                    newValue = a/b;
-                    preparedList = new ArrayList<>(ammended);
-                    preparedList.add(newValue);
-                    resultString = SolveNumbers(preparedList.toArray(new Integer[0]), target);
-                    if (resultString != null) //Success
-                    {
-                        return step + ",\n" + resultString;
-                    }
-                }
-
-                //Subtract
-                //Make sure for a-b -> a > b
-                if (a < b){ //Ensures a >= b
-                    int temp = a;
-                    a = b;
-                    b = temp;
-                }
-                step = "Subtract " + String.valueOf(b) + " from " + String.valueOf(a);
-                newValue = a-b;
-                preparedList = new ArrayList<>(ammended);
-                preparedList.add(newValue);
-                resultString = SolveNumbers(preparedList.toArray(new Integer[0]), target);
-                if (resultString != null) //Success
-                {
-                    return step + ",\n" + resultString;
-                }
-
-            }
-        }
-        return null;
-    }
 
     public void SolveAnagrams(View v)
     {
@@ -242,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Invalid letter input", Toast.LENGTH_LONG).show();
 
         }
+        //Create Background worker
         Thread t = new Thread(){
             @Override
             public void run()
@@ -276,6 +183,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void Solve(String letters)
     {
+        //Validate input
         if (!InputValidator.validateLetterInput(letters))
         {
             runOnUiThread(new Runnable() {
@@ -287,47 +195,12 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        //Solve
-        HashMap<Character, Integer> letterDict = Solver.getDictionary(letters);
-
+        //Get list of words
+        ArrayList<String> words;
         try{
-
-            ArrayList<String> words = FileHandler.getAllWords("words.txt", this);
-            for (int i = words.size()-1; i > -1; i--)
-            {
-                String word = words.get(i);
-                HashMap<Character, Integer> dictWord = Solver.getDictionary(word);
-                boolean failed = false;
-                for (char c : dictWord.keySet())
-                {
-                    if (!letterDict.containsKey(c))
-                    {
-                        failed = true;
-                        break;
-                    }
-                    if (dictWord.get(c) > letterDict.get(c))
-                    {
-                        failed = true;
-                        break;
-                    }
-                }
-                if (!failed)
-                {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            TextView letterResultView = findViewById(R.id.LetterResultView);
-                            letterResultView.setText("Solved: " + word);
-                        }
-                    });
-
-                    return;
-                }
-
-
-            }
+            words = FileHandler.getAllWords("words.txt", this);
         }
-        catch(IOException e)
+        catch (IOException e)
         {
             //TODO: Display file read error
             Log.d("DebugMessage", e.toString());
@@ -339,9 +212,38 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-
+            //Escape function if file error occurs.
             return;
         }
+
+
+        //Solve
+        HashMap<Character, Integer> letterDict = Solver.getDictionary(letters);
+
+        String word = this.letterSolver.SolveLetters(words, letters);
+
+        if (word == null)
+        {
+            //Display unsolvable error message
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    TextView resultView = findViewById(R.id.LetterResultView);
+                    Toast.makeText(getApplicationContext(), "No solutions", Toast.LENGTH_LONG).show();
+                }
+            });
+            return;
+        }
+
+        //Display word
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                TextView letterResultView = findViewById(R.id.LetterResultView);
+                letterResultView.setText("Solved: " + word);
+            }
+        });
+
     }
 
 

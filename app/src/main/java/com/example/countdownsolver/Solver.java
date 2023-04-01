@@ -11,6 +11,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class Solver {
+
     public static String[] solveAnagram(String letters, Context mContext) throws IOException
     {
         String[] allWords;
