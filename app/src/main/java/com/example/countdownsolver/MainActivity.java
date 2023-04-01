@@ -45,12 +45,6 @@ public class MainActivity extends AppCompatActivity {
         //Initialise solver classes
         numberSolver = new NumberImplimentation();
         letterSolver = new LettersImplimentation();
-
-    }
-
-    public void SolveAnagram()
-    {
-
     }
 
 

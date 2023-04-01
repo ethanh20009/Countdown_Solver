@@ -1,20 +1,38 @@
 package com.example.countdownsolver;
 
+
+
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
-public class NumberImplimentation implements NumberSolver {
+public class NumberSolverDynamic implements NumberSolver {
 
+    private List<List<Integer>> exploreCache;
     @Override
     public String SolveNumbers(Integer[] numbers, int target)
     {
+        exploreCache = new ArrayList<>();
         return SolveNumbersRecursive(numbers, target);
     }
 
     public String SolveNumbersRecursive(Integer[] numbers, int target)
     {
         List<Integer> numbersList = Arrays.asList(numbers);
+        Collections.sort(numbersList);
+
+        //See if already explored.
+        if (exploreCache.contains(numbersList))
+        {
+            return null;
+        }
+
+        //Mark as explored
+        exploreCache.add(numbersList);
+
+
         for (int n : numbers)
         {
             if (n == target)
